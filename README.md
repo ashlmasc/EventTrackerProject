@@ -29,6 +29,16 @@ The Event Tracker API enables users to perform CRUD operations on workout record
 - **RESTful API:** Designed to adhere to REST principles, providing a standardized interface for interacting with workout data.
 - **Testing with Postman:** Used Postman to test API endpoints and verify functionality.
 
+## API Routes
+
+| Action  | HTTP Method | Url Template      | Description                           |
+|---------|-------------|-------------------|---------------------------------------|
+| LIST    | GET         | /api/workouts     | Retrieve all workout records          |
+| READ    | GET         | /api/workouts/{id}| Retrieve details of a specific workout|
+| CREATE  | POST        | /api/workouts     | Create a new workout record           |
+| UPDATE  | PUT         | /api/workouts/{id}| Update an existing workout record     |
+| DELETE  | DELETE      | /api/workouts/{id}| Delete a workout record               |
+
 ## Technologies Used
 
 - **IDE**: Spring Tool Suite 4.
