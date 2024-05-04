@@ -9,5 +9,4 @@ class WorkoutLogRestApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }
