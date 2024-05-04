@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.skilldistillery.eventtracker.entities.Workout;
 import com.skilldistillery.eventtracker.repositories.WorkoutRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class WorkoutServiceImpl implements WorkoutService {
 	
@@ -19,11 +21,11 @@ public class WorkoutServiceImpl implements WorkoutService {
 
 	@Override
 	public Workout findById(int id) {
-		Optional<Workout> workoutOptional = workoutRepo.findById(id);
-        if (workoutOptional.isPresent()) {
-            return workoutOptional.get();
+		Optional<Workout> result = workoutRepo.findById(id);
+        if (result.isPresent()) {
+            return result.get();
         } else {
-            throw new RuntimeException("Post not found with id: " + id);
+            throw new EntityNotFoundException("Workout not found with id: " + id);
         }
 	}
 
