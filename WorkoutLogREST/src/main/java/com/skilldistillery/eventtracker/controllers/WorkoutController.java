@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,5 +45,11 @@ public class WorkoutController {
 	@PostMapping("workouts")
     public Workout createWorkout(@RequestBody Workout workout) {
         return workoutService.create(workout);
+    }
+	
+	// tested and works: http://localhost:8084/api/workouts/4
+	@PutMapping("workouts/{id}")
+    public Workout updateWorkout(@PathVariable("id") int id, @RequestBody Workout workout) {
+        return workoutService.update(workout, id);
     }
 }
