@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 
 @Entity
 public class Workout {
@@ -20,10 +21,23 @@ public class Workout {
 	
 	private String type;
 	
-	private Duration duration;
+	private Integer duration;
+	
+	@JoinColumn(name = "heart_rate_avg")
+	private Integer heartRateAvg;
+	
+	@JoinColumn(name = "is_fasted")
+	private boolean isFasted;
+	
+	@JoinColumn(name = "pre_workout_meal")
+	private boolean preWorkoutMeal;
+	
+	@JoinColumn(name = "caffeine_consumed")
+	private boolean caffeineConsumed;
+	
+	private String notes;
 
 	public Workout() {
-		super();
 	}
 
 	public int getId() {
@@ -50,12 +64,52 @@ public class Workout {
 		this.type = type;
 	}
 
-	public Duration getDuration() {
+	public Integer getDuration() {
 		return duration;
 	}
 
-	public void setDuration(Duration duration) {
+	public void setDuration(Integer duration) {
 		this.duration = duration;
+	}
+
+	public Integer getHeartRateAvg() {
+		return heartRateAvg;
+	}
+
+	public void setHeartRateAvg(Integer heartRateAvg) {
+		this.heartRateAvg = heartRateAvg;
+	}
+
+	public boolean isFasted() {
+		return isFasted;
+	}
+
+	public void setFasted(boolean isFasted) {
+		this.isFasted = isFasted;
+	}
+
+	public boolean isPreWorkoutMeal() {
+		return preWorkoutMeal;
+	}
+
+	public void setPreWorkoutMeal(boolean preWorkoutMeal) {
+		this.preWorkoutMeal = preWorkoutMeal;
+	}
+
+	public boolean isCaffeineConsumed() {
+		return caffeineConsumed;
+	}
+
+	public void setCaffeineConsumed(boolean caffeineConsumed) {
+		this.caffeineConsumed = caffeineConsumed;
+	}
+
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
 	}
 
 	@Override
