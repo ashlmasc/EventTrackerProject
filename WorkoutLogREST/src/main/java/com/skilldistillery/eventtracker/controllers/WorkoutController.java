@@ -31,7 +31,7 @@ public class WorkoutController {
 	}
 
 	// tested and works: http://localhost:8084/api/workouts
-	@GetMapping("workouts")
+	@GetMapping({"workouts", "workouts/"})
 	public List<Workout> getAllWorkouts() {
 		return workoutService.findAll();
 	}
@@ -43,18 +43,18 @@ public class WorkoutController {
 	}
 	
 	// tested and works: http://localhost:8084/api/workouts
-	@PostMapping("workouts")
+	@PostMapping({"workouts", "workouts/"})
     public Workout createWorkout(@RequestBody Workout workout) {
         return workoutService.create(workout);
     }
 	
 	// tested and works: http://localhost:8084/api/workouts/4
-	@PutMapping("workouts/{id}")
+	@PutMapping({ "workouts/{id}", "workouts/{id}/" })
     public Workout updateWorkout(@PathVariable("id") int id, @RequestBody Workout workout) {
         return workoutService.update(workout, id);
     }
 	
-	@DeleteMapping("workouts/{id}")
+	@DeleteMapping({ "workouts/{id}", "workouts/{id}/" })
     public void deleteWorkout(@PathVariable("id") int id) {
         workoutService.delete(id);
     }
