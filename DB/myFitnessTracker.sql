@@ -8,15 +8,15 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- Schema mydb
 -- -----------------------------------------------------
 -- -----------------------------------------------------
--- Schema personalfitnesstrackerdb
+-- Schema myfitnesstrackerdb
 -- -----------------------------------------------------
-DROP SCHEMA IF EXISTS `personalfitnesstrackerdb` ;
+DROP SCHEMA IF EXISTS `myfitnesstrackerdb` ;
 
 -- -----------------------------------------------------
--- Schema personalfitnesstrackerdb
+-- Schema myfitnesstrackerdb
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `personalfitnesstrackerdb` ;
-USE `personalfitnesstrackerdb` ;
+CREATE SCHEMA IF NOT EXISTS `myfitnesstrackerdb` ;
+USE `myfitnesstrackerdb` ;
 
 -- -----------------------------------------------------
 -- Table `workout`
@@ -52,10 +52,10 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- Data for table `workout`
 -- -----------------------------------------------------
 START TRANSACTION;
-USE `personalfitnesstrackerdb`;
+USE `myfitnesstrackerdb`;
 INSERT INTO `workout` (`id`, `date`, `type`, `duration`, `heart_rate_avg`, `is_fasted`, `pre_workout_meal`, `caffeine_consumed`, `notes`) VALUES (1, '2024-01-03', 'HIIT', 1111, 143, 1, 0, 1, NULL);
-INSERT INTO `workout` (`id`, `date`, `type`, `duration`, `heart_rate_avg`, `is_fasted`, `pre_workout_meal`, `caffeine_consumed`, `notes`) VALUES (DEFAULT, '2024-01-03', 'Yoga', 1076, 124, 1, 0, 1, 'T-Tapp');
-INSERT INTO `workout` (`id`, `date`, `type`, `duration`, `heart_rate_avg`, `is_fasted`, `pre_workout_meal`, `caffeine_consumed`, `notes`) VALUES (DEFAULT, '2024-01-02', 'Yoga', 1093, 109, 1, 0, 1, 'T-Tapp');
+INSERT INTO `workout` (`id`, `date`, `type`, `duration`, `heart_rate_avg`, `is_fasted`, `pre_workout_meal`, `caffeine_consumed`, `notes`) VALUES (2, '2024-01-03', 'Yoga', 1076, 124, 1, 0, 1, 'T-Tapp');
+INSERT INTO `workout` (`id`, `date`, `type`, `duration`, `heart_rate_avg`, `is_fasted`, `pre_workout_meal`, `caffeine_consumed`, `notes`) VALUES (3, '2024-01-02', 'Yoga', 1093, 109, 1, 0, 1, 'T-Tapp');
 
 COMMIT;
 

@@ -2,6 +2,7 @@ package com.skilldistillery.eventtracker.entities;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -44,6 +45,9 @@ class WorkoutTest {
 	@Test
 	void test_workout_entity_mapping() {
 		assertNotNull(workout);
-		assertEquals(1, workout.getId());
+		assertEquals("HIIT", workout.getType());
+		assertEquals(1111, workout.getDuration());
+		assertEquals(143, workout.getHeartRateAvg());
+		assertTrue(workout.isFasted());
 	}
 }

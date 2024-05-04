@@ -1,14 +1,13 @@
 package com.skilldistillery.eventtracker.entities;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 
 @Entity
 public class Workout {
@@ -23,16 +22,16 @@ public class Workout {
 	
 	private Integer duration;
 	
-	@JoinColumn(name = "heart_rate_avg")
+	@Column(name="heart_rate_avg")
 	private Integer heartRateAvg;
 	
-	@JoinColumn(name = "is_fasted")
+	@Column(name = "is_fasted")
 	private boolean isFasted;
 	
-	@JoinColumn(name = "pre_workout_meal")
+	@Column(name = "pre_workout_meal")
 	private boolean preWorkoutMeal;
 	
-	@JoinColumn(name = "caffeine_consumed")
+	@Column(name = "caffeine_consumed")
 	private boolean caffeineConsumed;
 	
 	private String notes;
@@ -71,6 +70,7 @@ public class Workout {
 	public void setDuration(Integer duration) {
 		this.duration = duration;
 	}
+
 
 	public Integer getHeartRateAvg() {
 		return heartRateAvg;

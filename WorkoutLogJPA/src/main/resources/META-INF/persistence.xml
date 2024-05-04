@@ -10,7 +10,7 @@
 	<!-- end entities -->
 	
     <properties>
-      <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/personalfitnesstrackerdb" />
+      <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/myfitnesstrackerdb" />
       <property name="jakarta.persistence.jdbc.user" value="ashlmasc"/>
       <property name="jakarta.persistence.jdbc.password" value="password" />
       <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
