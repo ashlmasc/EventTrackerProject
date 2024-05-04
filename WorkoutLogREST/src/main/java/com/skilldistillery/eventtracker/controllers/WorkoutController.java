@@ -2,6 +2,7 @@ package com.skilldistillery.eventtracker.controllers;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,5 +52,10 @@ public class WorkoutController {
 	@PutMapping("workouts/{id}")
     public Workout updateWorkout(@PathVariable("id") int id, @RequestBody Workout workout) {
         return workoutService.update(workout, id);
+    }
+	
+	@DeleteMapping("workouts/{id}")
+    public void deleteWorkout(@PathVariable("id") int id) {
+        workoutService.delete(id);
     }
 }
