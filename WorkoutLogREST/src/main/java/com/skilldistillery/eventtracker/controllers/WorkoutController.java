@@ -54,6 +54,7 @@ public class WorkoutController {
         return workoutService.update(workout, id);
     }
 	
+	// tested and works: http://localhost:8084/api/workouts/4
 	@DeleteMapping({ "workouts/{id}", "workouts/{id}/" })
     public void deleteWorkout(@PathVariable("id") int id) {
         workoutService.delete(id);
