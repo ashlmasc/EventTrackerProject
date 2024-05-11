@@ -17,7 +17,7 @@
     <h2>Create New Workout</h2>
     <input type="date" id="date" name="date" required>
     <input type="text" id="type" name="type" placeholder="Type of Workout" required>
-    <input type="number" id="duration" name="duration" placeholder="Duration (in minutes)" required>
+    <input type="text" id="duration" name="duration" placeholder="Duration (mm:ss)" required pattern="\d{1,2}:\d{2}" title="Duration should be in the format mm:ss">
     <input type="number" id="heartRateAvg" name="heartRateAvg" placeholder="Average Heart Rate" required>
     <input type="checkbox" id="isFasted" name="isFasted"> Fasted Workout<br>
     <input type="checkbox" id="preWorkoutMeal" name="preWorkoutMeal"> Pre Workout Meal<br>

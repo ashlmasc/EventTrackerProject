@@ -43,11 +43,16 @@ function displayWorkouts(workouts) {
         let workoutDiv = document.createElement('div');
         workoutDiv.className = 'workout-details'; // line so that I can possibly use css styling to target this class
 
+		// Convert duration from seconds to minutes and seconds
+        let minutes = Math.floor(workout.duration / 60);
+        let seconds = workout.duration % 60;
+        let durationDisplay = `${minutes} min ${seconds} sec`;
+
         // Details to display
         let details = [
             'Date: ' + workout.date,
             'Type: ' + workout.type,
-            'Duration: ' + workout.duration + ' minutes',
+            'Duration: ' + durationDisplay,
             'Heart Rate Avg: ' + workout.heartRateAvg + ' bpm',
             'Fasted: ' + (workout.isFasted ? 'Yes' : 'No'),
             'Pre Workout Meal: ' + (workout.preWorkoutMeal ? 'Yes' : 'No'),
@@ -88,6 +93,11 @@ function displayWorkoutsInTable(workouts) {
     for (let i = 0; i < workouts.length; i++) {
         let workout = workouts[i];
         let row = document.createElement('tr');
+        
+        // Duration conversion for display
+        let minutes = Math.floor(workout.duration / 60);
+        let seconds = workout.duration % 60;
+        let durationDisplay = `${minutes} min ${seconds} sec`;
 
         // Directly creating and appending cells
         let dateCell = document.createElement('td');
@@ -99,7 +109,7 @@ function displayWorkoutsInTable(workouts) {
         row.appendChild(typeCell);
 
         let durationCell = document.createElement('td');
-        durationCell.textContent = workout.duration + ' minutes';
+        durationCell.textContent = durationDisplay;
         row.appendChild(durationCell);
 
         let heartRateCell = document.createElement('td');
@@ -140,16 +150,20 @@ function setupFormHandling() {
     form.addEventListener('submit', handleWorkoutFormSubmission);
 }
 
-// Handle the form submission event
+// Handle form submission event
 function handleWorkoutFormSubmission(event) {
     event.preventDefault(); // Prevent the default form submission behavior
     console.log("Handling workout form submission...");
+    
+    // Extracting minutes and seconds from the duration input
+    const durationInput = document.getElementById('duration').value;
+    const [minutes, seconds] = durationInput.split(':').map(Number); // need to split the input and convert to numbers
 
     // Collect data from the form
     let formData = {
         date: document.getElementById('date').value,
         type: document.getElementById('type').value,
-        duration: document.getElementById('duration').value,
+		duration: (minutes * 60) + seconds, // Convert min and sec to total seconds
         heartRateAvg: document.getElementById('heartRateAvg').value,
         isFasted: document.getElementById('isFasted').checked,
         preWorkoutMeal: document.getElementById('preWorkoutMeal').checked,
@@ -157,7 +171,7 @@ function handleWorkoutFormSubmission(event) {
         notes: document.getElementById('notes').value
     };
 
-    // Log the input values for verification
+    // Log input values for verification
     console.log('Workout Data:', formData);
 
     // Validate the form data
@@ -169,16 +183,21 @@ function handleWorkoutFormSubmission(event) {
     }
 }
 
-// Validate the form data
+// validate form data
 function validateWorkoutFormData(formData) {
     let errors = [];
+    const durationPattern = /^\d{1,2}:\d{2}$/; // Pattern to match mm:ss format
+
     if (!formData.date || !formData.type || !formData.duration || !formData.heartRateAvg) {
         errors.push("All required fields must be completed.");
+    }
+    if (!durationPattern.test(document.getElementById('duration').value)) {
+        errors.push("Duration must be in mm:ss format.");
     }
     return errors;
 }
 
-// Submit the workout data to the server
+// submit workout data to the server
 function submitWorkoutData(workoutData) {
     let xhr = new XMLHttpRequest();
     xhr.open('POST', '/api/workouts', true);
@@ -186,7 +205,7 @@ function submitWorkoutData(workoutData) {
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
             console.log('Workout created successfully');
-            loadWorkoutLog(); // Reload the list of workouts
+            loadWorkoutLog(); // Reload list of workouts
         }
     };
     xhr.send(JSON.stringify(workoutData));
