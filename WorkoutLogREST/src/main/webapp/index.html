@@ -7,14 +7,16 @@
 <link rel="stylesheet" href="css/workoutLog.css">
 <script type="text/javascript" src="js/script.js"></script>
 </head>
-<body>
+<body onload="initializeForm()">
 	<h1>It works!!</h1>
 	
 	<div id="content"></div>
 	<div id="tableContent"></div>
+	<div id="errors"></div>
 	
 	<form id="newWorkoutForm">
     <h2>Create New Workout</h2>
+    <input type="hidden" id="workoutId" name="workoutId" value="">
     <input type="date" id="date" name="date" required>
     <input type="text" id="type" name="type" placeholder="Type of Workout" required>
     <input type="text" id="duration" name="duration" placeholder="Duration (mm:ss)" required pattern="\d{1,2}:\d{2}" title="Duration should be in the format mm:ss">

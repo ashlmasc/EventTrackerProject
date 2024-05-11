@@ -1,11 +1,18 @@
 window.addEventListener('load', function(e){
 	loadWorkoutLog();
-	setupFormHandling();
-		
-	//configureLookupByIdForm
-	
+
 	
 });
+
+function initializeForm() {
+    let workoutId = document.getElementById('workoutId').value; 
+    if (workoutId) {
+        setupFormForUpdate(workoutId);
+    } else {
+        setupFormForCreate();
+    }
+}
+
 
 // Function to load workout data from the server
 let loadWorkoutLog = function (){
@@ -144,26 +151,21 @@ function displayWorkoutsInTable(workouts) {
     tableContentDiv.appendChild(table);
 }
 
-// Configure the form event listeners for handling form submission
-function setupFormHandling() {
-    let form = document.getElementById('newWorkoutForm');
-    form.addEventListener('submit', handleWorkoutFormSubmission);
-}
 
-// Handle form submission event
-function handleWorkoutFormSubmission(event) {
+// Function to handle both creating and updating workouts
+function submitWorkoutForm(event, workoutId) {
     event.preventDefault(); // Prevent the default form submission behavior
-    console.log("Handling workout form submission...");
+    console.log("Submitting workout form...");
     
     // Extracting minutes and seconds from the duration input
-    const durationInput = document.getElementById('duration').value;
+   const durationInput = document.getElementById('duration').value;
     const [minutes, seconds] = durationInput.split(':').map(Number); // need to split the input and convert to numbers
 
     // Collect data from the form
     let formData = {
         date: document.getElementById('date').value,
         type: document.getElementById('type').value,
-		duration: (minutes * 60) + seconds, // Convert min and sec to total seconds
+        duration: (minutes * 60) + seconds, // Convert min and sec to total seconds
         heartRateAvg: document.getElementById('heartRateAvg').value,
         isFasted: document.getElementById('isFasted').checked,
         preWorkoutMeal: document.getElementById('preWorkoutMeal').checked,
@@ -171,16 +173,22 @@ function handleWorkoutFormSubmission(event) {
         notes: document.getElementById('notes').value
     };
 
+
     // Log input values for verification
     console.log('Workout Data:', formData);
 
     // Validate the form data
     let errors = validateWorkoutFormData(formData);
     if (errors.length === 0) {
-        submitWorkoutData(formData); // Submit data if no errors
+        submitWorkoutData(formData);
     } else {
-        displayErrors(errors); // Display errors if validation fails
+        displayErrors(errors); 
     }
+    
+    let method = workoutId ? 'PUT' : 'POST';
+    let url = '/api/workouts' + (workoutId ? '/' + workoutId : '');
+
+    submitWorkoutData(formData, method, url);
 }
 
 // validate form data
@@ -197,18 +205,20 @@ function validateWorkoutFormData(formData) {
     return errors;
 }
 
-// submit workout data to the server
-function submitWorkoutData(workoutData) {
+// Generic function to submit workout data to the server
+function submitWorkoutData(formData, method, url) {
     let xhr = new XMLHttpRequest();
-    xhr.open('POST', '/api/workouts', true);
+    xhr.open(method, url, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            console.log('Workout created successfully');
-            loadWorkoutLog(); // Reload list of workouts
+    xhr.onload = function() {
+        if (xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 201)) {
+            console.log('Workout saved successfully');
+            loadWorkoutLog(); // Reload the list of workouts
+        } else {
+            console.error('Failed to save workout:', xhr.responseText);
         }
     };
-    xhr.send(JSON.stringify(workoutData));
+    xhr.send(JSON.stringify(formData));
 }
 
 // Display error messages
@@ -221,4 +231,20 @@ function displayErrors(errors) {
         p.style.color = 'red'; // Set error message text color to red
         errorsDiv.appendChild(p);
     });
+}
+
+// Function to setup form for new workout submission
+function setupFormForCreate() {
+    let form = document.getElementById('newWorkoutForm');
+    form.onsubmit = function(event) {
+        submitWorkoutForm(event);  
+    };
+}
+
+// Function to setup form for updating an existing workout
+function setupFormForUpdate(workoutId) {
+    let form = document.getElementById('newWorkoutForm');
+    form.onsubmit = function(event) {
+        submitWorkoutForm(event, workoutId); 
+    };
 }
