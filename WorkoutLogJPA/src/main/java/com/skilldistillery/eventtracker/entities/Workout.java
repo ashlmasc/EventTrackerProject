@@ -1,7 +1,9 @@
 package com.skilldistillery.eventtracker.entities;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,7 +18,8 @@ public class Workout {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	private LocalDateTime date;
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	private LocalDate date;
 	
 	private String type;
 	
@@ -47,11 +50,11 @@ public class Workout {
 		this.id = id;
 	}
 
-	public LocalDateTime getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
 
-	public void setDate(LocalDateTime date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 

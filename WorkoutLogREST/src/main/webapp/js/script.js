@@ -1,5 +1,6 @@
 window.addEventListener('load', function(e){
 	loadWorkoutLog();
+	setupFormHandling();
 		
 	//configureLookupByIdForm
 	
@@ -131,4 +132,74 @@ function displayWorkoutsInTable(workouts) {
     let tableContentDiv = document.getElementById('tableContent');
     tableContentDiv.textContent = ''; // Clear any previous content
     tableContentDiv.appendChild(table);
+}
+
+// Configure the form event listeners for handling form submission
+function setupFormHandling() {
+    let form = document.getElementById('newWorkoutForm');
+    form.addEventListener('submit', handleWorkoutFormSubmission);
+}
+
+// Handle the form submission event
+function handleWorkoutFormSubmission(event) {
+    event.preventDefault(); // Prevent the default form submission behavior
+    console.log("Handling workout form submission...");
+
+    // Collect data from the form
+    let formData = {
+        date: document.getElementById('date').value,
+        type: document.getElementById('type').value,
+        duration: document.getElementById('duration').value,
+        heartRateAvg: document.getElementById('heartRateAvg').value,
+        isFasted: document.getElementById('isFasted').checked,
+        preWorkoutMeal: document.getElementById('preWorkoutMeal').checked,
+        caffeineConsumed: document.getElementById('caffeineConsumed').checked,
+        notes: document.getElementById('notes').value
+    };
+
+    // Log the input values for verification
+    console.log('Workout Data:', formData);
+
+    // Validate the form data
+    let errors = validateWorkoutFormData(formData);
+    if (errors.length === 0) {
+        submitWorkoutData(formData); // Submit data if no errors
+    } else {
+        displayErrors(errors); // Display errors if validation fails
+    }
+}
+
+// Validate the form data
+function validateWorkoutFormData(formData) {
+    let errors = [];
+    if (!formData.date || !formData.type || !formData.duration || !formData.heartRateAvg) {
+        errors.push("All required fields must be completed.");
+    }
+    return errors;
+}
+
+// Submit the workout data to the server
+function submitWorkoutData(workoutData) {
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', '/api/workouts', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log('Workout created successfully');
+            loadWorkoutLog(); // Reload the list of workouts
+        }
+    };
+    xhr.send(JSON.stringify(workoutData));
+}
+
+// Display error messages
+function displayErrors(errors) {
+    let errorsDiv = document.getElementById('errors');
+    errorsDiv.textContent = ''; // Clear existing errors
+    errors.forEach(function(error) {
+        let p = document.createElement('p');
+        p.textContent = error;
+        p.style.color = 'red'; // Set error message text color to red
+        errorsDiv.appendChild(p);
+    });
 }
