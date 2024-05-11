@@ -12,6 +12,20 @@
 	
 	<div id="content"></div>
 	<div id="tableContent"></div>
+	
+	<form id="newWorkoutForm">
+    <h2>Create New Workout</h2>
+    <input type="date" id="date" name="date" required>
+    <input type="text" id="type" name="type" placeholder="Type of Workout" required>
+    <input type="number" id="duration" name="duration" placeholder="Duration (in minutes)" required>
+    <input type="number" id="heartRateAvg" name="heartRateAvg" placeholder="Average Heart Rate" required>
+    <input type="checkbox" id="isFasted" name="isFasted"> Fasted Workout<br>
+    <input type="checkbox" id="preWorkoutMeal" name="preWorkoutMeal"> Pre Workout Meal<br>
+    <input type="checkbox" id="caffeineConsumed" name="caffeineConsumed"> Caffeine Consumed<br>
+    <textarea id="notes" name="notes" placeholder="Notes"></textarea>
+    <button type="submit">Create Workout</button>
+</form>
+	
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
