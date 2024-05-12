@@ -8,25 +8,65 @@
 <script type="text/javascript" src="js/script.js"></script>
 </head>
 <body onload="initializeForm()">
-	<h1>It works!!</h1>
+	<h1>Workout Log</h1>
 	
 	<div id="content"></div>
 	<div id="tableContent"></div>
 	<div id="errors"></div>
 	
-	<form id="newWorkoutForm">
-    <h2>Create New Workout</h2>
+<!-- 	<form id="newWorkoutForm"> -->
+<!--     <h2>Create New Workout</h2> -->
+<!--     <input type="hidden" id="workoutId" name="workoutId" value=""> -->
+<!--     <input type="date" id="date" name="date" required> -->
+<!--     <input type="text" id="type" name="type" placeholder="Type of Workout" required> -->
+<!--     <input type="text" id="duration" name="duration" placeholder="Duration (mm:ss)" required pattern="\d{1,2}:\d{2}" title="Duration should be in the format mm:ss"> -->
+<!--     <input type="number" id="heartRateAvg" name="heartRateAvg" placeholder="Average Heart Rate" required> -->
+<!--     <input type="checkbox" id="isFasted" name="isFasted"> Fasted Workout<br> -->
+<!--     <input type="checkbox" id="preWorkoutMeal" name="preWorkoutMeal"> Pre Workout Meal<br> -->
+<!--     <input type="checkbox" id="caffeineConsumed" name="caffeineConsumed"> Caffeine Consumed<br> -->
+<!--     <textarea id="notes" name="notes" placeholder="Notes"></textarea> -->
+<!--     <button type="submit">Create Workout</button> -->
+<!-- </form> -->
+
+<form id="newWorkoutForm" class="p-3">
+    <h2 id="formHeading">Create New Workout</h2>
     <input type="hidden" id="workoutId" name="workoutId" value="">
-    <input type="date" id="date" name="date" required>
-    <input type="text" id="type" name="type" placeholder="Type of Workout" required>
-    <input type="text" id="duration" name="duration" placeholder="Duration (mm:ss)" required pattern="\d{1,2}:\d{2}" title="Duration should be in the format mm:ss">
-    <input type="number" id="heartRateAvg" name="heartRateAvg" placeholder="Average Heart Rate" required>
-    <input type="checkbox" id="isFasted" name="isFasted"> Fasted Workout<br>
-    <input type="checkbox" id="preWorkoutMeal" name="preWorkoutMeal"> Pre Workout Meal<br>
-    <input type="checkbox" id="caffeineConsumed" name="caffeineConsumed"> Caffeine Consumed<br>
-    <textarea id="notes" name="notes" placeholder="Notes"></textarea>
-    <button type="submit">Create Workout</button>
+    
+    <div class="mb-3">
+        <label for="date" class="form-label">Date</label>
+        <input type="date" id="date" name="date" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label for="type" class="form-label">Type of Workout</label>
+        <input type="text" id="type" name="type" class="form-control" placeholder="Type of Workout" required>
+    </div>
+    <div class="mb-3">
+        <label for="duration" class="form-label">Duration (mm:ss)</label>
+        <input type="text" id="duration" name="duration" class="form-control" placeholder="Duration (mm:ss)" required pattern="\d{1,2}:\d{2}" title="Duration should be in the format mm:ss">
+    </div>
+    <div class="mb-3">
+        <label for="heartRateAvg" class="form-label">Average Heart Rate</label>
+        <input type="number" id="heartRateAvg" name="heartRateAvg" class="form-control" placeholder="Average Heart Rate" required>
+    </div>
+    <div class="mb-3 form-check">
+        <input type="checkbox" id="isFasted" name="isFasted" class="form-check-input">
+        <label class="form-check-label" for="isFasted">Fasted Workout</label>
+    </div>
+    <div class="mb-3 form-check">
+        <input type="checkbox" id="preWorkoutMeal" name="preWorkoutMeal" class="form-check-input">
+        <label class="form-check-label" for="preWorkoutMeal">Pre Workout Meal</label>
+    </div>
+    <div class="mb-3 form-check">
+        <input type="checkbox" id="caffeineConsumed" name="caffeineConsumed" class="form-check-input">
+        <label class="form-check-label" for="caffeineConsumed">Caffeine Consumed</label>
+    </div>
+    <div class="mb-3">
+        <label for="notes" class="form-label">Notes</label>
+        <textarea id="notes" name="notes" class="form-control" placeholder="Notes"></textarea>
+    </div>
+    <button type="submit" id="submitBtn" class="btn btn-primary">Create Workout</button>
 </form>
+
 	
 
 

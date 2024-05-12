@@ -1,250 +1,358 @@
-window.addEventListener('load', function(e){
+window.addEventListener('load', function(e) {
 	loadWorkoutLog();
 
-	
+
 });
 
 function initializeForm() {
-    let workoutId = document.getElementById('workoutId').value; 
-    if (workoutId) {
-        setupFormForUpdate(workoutId);
+    let workoutIdElement = document.getElementById('workoutId');
+    if (workoutIdElement) {
+        let workoutId = workoutIdElement.value;
+        if (workoutId) {
+            setupFormForUpdate(workoutId);
+        } else {
+            setupFormForCreate();
+        }
     } else {
-        setupFormForCreate();
+        console.error("workoutId element not found");
     }
 }
 
 
 // Function to load workout data from the server
-let loadWorkoutLog = function (){
+let loadWorkoutLog = function() {
 	// Create a new XMLHttpRequest object to interact with the server.
-    let xhr = new XMLHttpRequest();
-    // Initialize a request to the API endpoint to fetch all workouts using the GET method.
-    xhr.open('GET', '/api/workouts', true);
+	let xhr = new XMLHttpRequest();
+	// Initialize a request to the API endpoint to fetch all workouts using the GET method.
+	xhr.open('GET', '/api/workouts', true);
 
-    // Set up what happens when the server response is received.
-    xhr.onreadystatechange = function() {
-        // Check if the request is complete (readyState === 4) and was successful (status === 200).
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            // Parse the JSON response into a JavaScript array.
-            let workouts = JSON.parse(xhr.responseText);
-            // Call the function to display the workouts in a table.
-           displayWorkouts(workouts);
-           displayWorkoutsInTable(workouts);
-        }
-    };
+	// Set up what happens when the server response is received.
+	xhr.onreadystatechange = function() {
+		// Check if the request is complete (readyState === 4) and was successful (status === 200).
+		if (xhr.readyState === 4 && xhr.status === 200) {
+			// Parse the JSON response into a JavaScript array.
+			let workouts = JSON.parse(xhr.responseText);
+			// Call the function to display the workouts in a table.
+			displayWorkouts(workouts);
+			displayWorkoutsInTable(workouts);
+		}
+	};
 
-    // Send the request to the server.
-    xhr.send();
+	// Send the request to the server.
+	xhr.send();
 };
 
-// Function to display workouts using div elements in a more traditional DOM manipulation way.
-// Function to display workouts using div elements, using 'let' for variable declarations.
 function displayWorkouts(workouts) {
-    // Get the container div where workouts will be displayed.
-    let contentDiv = document.getElementById('content');
-    contentDiv.textContent = ''; // Clear existing content
+	// Get the container div where workouts will be displayed.
+	let contentDiv = document.getElementById('content');
+	contentDiv.textContent = ''; // Clear existing content
 
-    // Loop through each workout and create elements for each detail.
-    for (let i = 0; i < workouts.length; i++) {
-        let workout = workouts[i];
-        let workoutDiv = document.createElement('div');
-        workoutDiv.className = 'workout-details'; // line so that I can possibly use css styling to target this class
+	// Loop through each workout and create elements for each detail.
+	for (let i = 0; i < workouts.length; i++) {
+		let workout = workouts[i];
+		let workoutDiv = document.createElement('div');
+		workoutDiv.className = 'workout-details'; // line so that I can possibly use css styling to target this class
 
 		// Convert duration from seconds to minutes and seconds
-        let minutes = Math.floor(workout.duration / 60);
-        let seconds = workout.duration % 60;
-        let durationDisplay = `${minutes} min ${seconds} sec`;
+		let minutes = Math.floor(workout.duration / 60);
+		let seconds = workout.duration % 60;
+		let durationDisplay = `${minutes} min ${seconds} sec`;
 
-        // Details to display
-        let details = [
-            'Date: ' + workout.date,
-            'Type: ' + workout.type,
-            'Duration: ' + durationDisplay,
-            'Heart Rate Avg: ' + workout.heartRateAvg + ' bpm',
-            'Fasted: ' + (workout.isFasted ? 'Yes' : 'No'),
-            'Pre Workout Meal: ' + (workout.preWorkoutMeal ? 'Yes' : 'No'),
-            'Caffeine Consumed: ' + (workout.caffeineConsumed ? 'Yes' : 'No'),
-            'Notes: ' + workout.notes
-        ];
+		// Details to display
+		let details = [
+			'Date: ' + workout.date,
+			'Type: ' + workout.type,
+			'Duration: ' + durationDisplay,
+			'Heart Rate Avg: ' + workout.heartRateAvg + ' bpm',
+			'Fasted: ' + (workout.isFasted ? 'Yes' : 'No'),
+			'Pre Workout Meal: ' + (workout.preWorkoutMeal ? 'Yes' : 'No'),
+			'Caffeine Consumed: ' + (workout.caffeineConsumed ? 'Yes' : 'No'),
+			'Notes: ' + workout.notes
+		];
 
-        // Loop through each detail and create a paragraph element to display it.
-        for (let j = 0; j < details.length; j++) {
-            let p = document.createElement('p');
-            p.textContent = details[j];
-            workoutDiv.appendChild(p);
-        }
+		// Loop through each detail and create a paragraph element to display it.
+		for (let j = 0; j < details.length; j++) {
+			let p = document.createElement('p');
+			p.textContent = details[j];
+			workoutDiv.appendChild(p);
+		}
 
-        // Append the workout div to the container.
-        contentDiv.appendChild(workoutDiv);
-    }
+		// Create and append update button
+		let updateButton = document.createElement('button');
+		updateButton.textContent = 'Update';
+		updateButton.className = 'btn btn-primary';
+		updateButton.onclick = function() {
+			setupFormForUpdate(workout);
+		};
+		workoutDiv.appendChild(updateButton);
+
+		// Create and append delete button
+		let deleteButton = document.createElement('button');
+		deleteButton.textContent = 'Delete';
+		deleteButton.className = 'btn btn-danger';
+		deleteButton.onclick = function() {
+			deleteWorkout(workout.id);
+		};
+		workoutDiv.appendChild(deleteButton);
+
+		// Append the workout div to the container.
+		contentDiv.appendChild(workoutDiv);
+	}
 }
 
 // Function to create and populate a table with workout data
 function displayWorkoutsInTable(workouts) {
-    let table = document.createElement('table');
-    table.className = 'table'; // Using Bootstrap class for styling
-    let thead = document.createElement('thead');
-    let tbody = document.createElement('tbody');
+	let table = document.createElement('table');
+	table.className = 'table'; // Using Bootstrap class for styling
+	let thead = document.createElement('thead');
+	let tbody = document.createElement('tbody');
 
-    // Define table headers and append them
-    let headers = ['Date', 'Type', 'Duration', 'Heart Rate Avg', 'Fasted', 'Pre Workout Meal', 'Caffeine Consumed', 'Notes'];
-    let headerRow = document.createElement('tr');
-    for (let i = 0; i < headers.length; i++) {
-        let th = document.createElement('th');
-        th.textContent = headers[i];
-        headerRow.appendChild(th);
-    }
-    thead.appendChild(headerRow);
+	// Define table headers and append them
+	let headers = ['Date', 'Type', 'Duration', 'Heart Rate Avg', 'Fasted', 'Pre Workout Meal', 'Caffeine Consumed', 'Notes'];
+	let headerRow = document.createElement('tr');
+	for (let i = 0; i < headers.length; i++) {
+		let th = document.createElement('th');
+		th.textContent = headers[i];
+		headerRow.appendChild(th);
+	}
+	thead.appendChild(headerRow);
 
-    // Populate table body with workout data
-    for (let i = 0; i < workouts.length; i++) {
-        let workout = workouts[i];
-        let row = document.createElement('tr');
-        
-        // Duration conversion for display
-        let minutes = Math.floor(workout.duration / 60);
-        let seconds = workout.duration % 60;
-        let durationDisplay = `${minutes} min ${seconds} sec`;
+	// Populate table body with workout data
+	for (let i = 0; i < workouts.length; i++) {
+		let workout = workouts[i];
+		let row = document.createElement('tr');
 
-        // Directly creating and appending cells
-        let dateCell = document.createElement('td');
-        dateCell.textContent = workout.date;
-        row.appendChild(dateCell);
+		// Duration conversion for display
+		let minutes = Math.floor(workout.duration / 60);
+		let seconds = workout.duration % 60;
+		let durationDisplay = `${minutes} min ${seconds} sec`;
 
-        let typeCell = document.createElement('td');
-        typeCell.textContent = workout.type;
-        row.appendChild(typeCell);
+		// Directly creating and appending cells
+		let dateCell = document.createElement('td');
+		dateCell.textContent = workout.date;
+		row.appendChild(dateCell);
 
-        let durationCell = document.createElement('td');
-        durationCell.textContent = durationDisplay;
-        row.appendChild(durationCell);
+		let typeCell = document.createElement('td');
+		typeCell.textContent = workout.type;
+		row.appendChild(typeCell);
 
-        let heartRateCell = document.createElement('td');
-        heartRateCell.textContent = workout.heartRateAvg + ' bpm';
-        row.appendChild(heartRateCell);
+		let durationCell = document.createElement('td');
+		durationCell.textContent = durationDisplay;
+		row.appendChild(durationCell);
 
-        let fastedCell = document.createElement('td');
-        fastedCell.textContent = workout.isFasted ? 'Yes' : 'No';
-        row.appendChild(fastedCell);
+		let heartRateCell = document.createElement('td');
+		heartRateCell.textContent = workout.heartRateAvg + ' bpm';
+		row.appendChild(heartRateCell);
 
-        let mealCell = document.createElement('td');
-        mealCell.textContent = workout.preWorkoutMeal ? 'Yes' : 'No';
-        row.appendChild(mealCell);
+		let fastedCell = document.createElement('td');
+		fastedCell.textContent = workout.isFasted ? 'Yes' : 'No';
+		row.appendChild(fastedCell);
 
-        let caffeineCell = document.createElement('td');
-        caffeineCell.textContent = workout.caffeineConsumed ? 'Yes' : 'No';
-        row.appendChild(caffeineCell);
+		let mealCell = document.createElement('td');
+		mealCell.textContent = workout.preWorkoutMeal ? 'Yes' : 'No';
+		row.appendChild(mealCell);
 
-        let notesCell = document.createElement('td');
-        notesCell.textContent = workout.notes;
-        row.appendChild(notesCell);
+		let caffeineCell = document.createElement('td');
+		caffeineCell.textContent = workout.caffeineConsumed ? 'Yes' : 'No';
+		row.appendChild(caffeineCell);
 
-        tbody.appendChild(row);
-    }
+		let notesCell = document.createElement('td');
+		notesCell.textContent = workout.notes;
+		row.appendChild(notesCell);
 
-    table.appendChild(thead);
-    table.appendChild(tbody);
+		// Actions (Update and Delete buttons)
+		let actionsCell = document.createElement('td');
+		let updateButton = document.createElement('button');
+		updateButton.textContent = 'Update';
+		updateButton.className = 'btn btn-primary';
+		updateButton.onclick = function() {
+			setupFormForUpdate(workout);
+		};
 
-    // Get tableContent div and append the created table to it
-    let tableContentDiv = document.getElementById('tableContent');
-    tableContentDiv.textContent = ''; // Clear any previous content
-    tableContentDiv.appendChild(table);
+		let deleteButton = document.createElement('button');
+		deleteButton.textContent = 'Delete';
+		deleteButton.className = 'btn btn-danger';
+		deleteButton.onclick = function() {
+			deleteWorkout(workout.id);
+		};
+
+		actionsCell.appendChild(updateButton);
+		actionsCell.appendChild(deleteButton);
+		row.appendChild(actionsCell);
+
+		tbody.appendChild(row);
+	}
+
+	table.appendChild(thead);
+	table.appendChild(tbody);
+
+	// Get tableContent div and append the created table to it
+	let tableContentDiv = document.getElementById('tableContent');
+	tableContentDiv.textContent = ''; // Clear any previous content
+	tableContentDiv.appendChild(table);
 }
 
 
 // Function to handle both creating and updating workouts
 function submitWorkoutForm(event, workoutId) {
-    event.preventDefault(); // Prevent the default form submission behavior
-    console.log("Submitting workout form...");
-    
-    // Extracting minutes and seconds from the duration input
-   const durationInput = document.getElementById('duration').value;
-    const [minutes, seconds] = durationInput.split(':').map(Number); // need to split the input and convert to numbers
+	event.preventDefault(); // Prevent the default form submission behavior
+	console.log("Submitting workout form...");
+	console.log("Workout ID:", workoutId); // Check if ID is present
 
-    // Collect data from the form
-    let formData = {
-        date: document.getElementById('date').value,
-        type: document.getElementById('type').value,
-        duration: (minutes * 60) + seconds, // Convert min and sec to total seconds
-        heartRateAvg: document.getElementById('heartRateAvg').value,
-        isFasted: document.getElementById('isFasted').checked,
-        preWorkoutMeal: document.getElementById('preWorkoutMeal').checked,
-        caffeineConsumed: document.getElementById('caffeineConsumed').checked,
-        notes: document.getElementById('notes').value
-    };
+	// Extracting minutes and seconds from the duration input
+	const durationInput = document.getElementById('duration').value;
+	const [minutes, seconds] = durationInput.split(':').map(Number); // need to split the input and convert to numbers
 
+	// Collect data from the form
+	let formData = {
+		date: document.getElementById('date').value,
+		type: document.getElementById('type').value,
+		duration: (minutes * 60) + seconds, // Convert min and sec to total seconds
+		heartRateAvg: document.getElementById('heartRateAvg').value,
+		isFasted: document.getElementById('isFasted').checked,
+		preWorkoutMeal: document.getElementById('preWorkoutMeal').checked,
+		caffeineConsumed: document.getElementById('caffeineConsumed').checked,
+		notes: document.getElementById('notes').value
+	};
 
-    // Log input values for verification
-    console.log('Workout Data:', formData);
+	let method = workoutId ? 'PUT' : 'POST';
+   // let url = '/api/workouts' + (workoutId ? '/' + workoutId : ''); old one that shows an error
+	let url = workoutId ? `/api/workouts/${workoutId}` : '/api/workouts';
+	
+	console.log("Request Method:", method);
+    console.log("Request URL:", url);
 
-    // Validate the form data
-    let errors = validateWorkoutFormData(formData);
-    if (errors.length === 0) {
-        submitWorkoutData(formData);
-    } else {
-        displayErrors(errors); 
-    }
-    
-    let method = workoutId ? 'PUT' : 'POST';
-    let url = '/api/workouts' + (workoutId ? '/' + workoutId : '');
-
-    submitWorkoutData(formData, method, url);
+	submitWorkoutData(formData, method, url);
 }
 
 // validate form data
 function validateWorkoutFormData(formData) {
-    let errors = [];
-    const durationPattern = /^\d{1,2}:\d{2}$/; // Pattern to match mm:ss format
+	let errors = [];
+	const durationPattern = /^\d{1,2}:\d{2}$/; // Pattern to match mm:ss format
 
-    if (!formData.date || !formData.type || !formData.duration || !formData.heartRateAvg) {
-        errors.push("All required fields must be completed.");
-    }
-    if (!durationPattern.test(document.getElementById('duration').value)) {
-        errors.push("Duration must be in mm:ss format.");
-    }
-    return errors;
+	if (!formData.date || !formData.type || !formData.duration || !formData.heartRateAvg) {
+		errors.push("All required fields must be completed.");
+	}
+	if (!durationPattern.test(document.getElementById('duration').value)) {
+		errors.push("Duration must be in mm:ss format.");
+	}
+	return errors;
 }
 
-// Generic function to submit workout data to the server
+
 function submitWorkoutData(formData, method, url) {
-    let xhr = new XMLHttpRequest();
-    xhr.open(method, url, true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.onload = function() {
-        if (xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 201)) {
-            console.log('Workout saved successfully');
-            loadWorkoutLog(); // Reload the list of workouts
-        } else {
-            console.error('Failed to save workout:', xhr.responseText);
-        }
-    };
-    xhr.send(JSON.stringify(formData));
+	let xhr = new XMLHttpRequest();
+	xhr.open(method, url, true);
+	xhr.setRequestHeader('Content-Type', 'application/json');
+	xhr.onload = function() {
+		if (xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 201)) {
+			console.log('Workout saved successfully');
+			loadWorkoutLog(); // Reload the list of workouts
+		} else {
+			console.error('Failed to save workout:', xhr.responseText);
+		}
+	};
+	xhr.send(JSON.stringify(formData));
 }
 
 // Display error messages
 function displayErrors(errors) {
-    let errorsDiv = document.getElementById('errors');
-    errorsDiv.textContent = ''; // Clear existing errors
-    errors.forEach(function(error) {
-        let p = document.createElement('p');
-        p.textContent = error;
-        p.style.color = 'red'; // Set error message text color to red
-        errorsDiv.appendChild(p);
-    });
+	let errorsDiv = document.getElementById('errors');
+	errorsDiv.textContent = ''; // Clear existing errors
+	errors.forEach(function(error) {
+		let p = document.createElement('p');
+		p.textContent = error;
+		p.style.color = 'red'; // Set error message text color to red
+		errorsDiv.appendChild(p);
+	});
 }
 
 // Function to setup form for new workout submission
 function setupFormForCreate() {
+    document.getElementById('workoutId').value = "";
+    clearFormFields();
     let form = document.getElementById('newWorkoutForm');
     form.onsubmit = function(event) {
-        submitWorkoutForm(event);  
+        submitWorkoutForm(event, null);
     };
+    document.getElementById('formHeading').textContent = "Create New Workout";
+    document.getElementById('submitBtn').textContent = "Create Workout";
 }
 
 // Function to setup form for updating an existing workout
-function setupFormForUpdate(workoutId) {
+function setupFormForUpdate(workout) {
+    let form = document.getElementById('newWorkoutForm');
+    // Set values from the workout to update
+    document.getElementById('workoutId').value = workout.id;
+    document.getElementById('date').value = workout.date;
+    document.getElementById('type').value = workout.type;
+    document.getElementById('duration').value = formatDuration(workout.duration);
+    document.getElementById('heartRateAvg').value = workout.heartRateAvg;
+    document.getElementById('isFasted').checked = workout.isFasted;
+    document.getElementById('preWorkoutMeal').checked = workout.preWorkoutMeal;
+    document.getElementById('caffeineConsumed').checked = workout.caffeineConsumed;
+    document.getElementById('notes').value = workout.notes;
+
+    form.onsubmit = function(event) {
+        submitWorkoutForm(event, workout.id); // Passing the actual workoutId for update
+    };
+}
+
+// Function to clear form fields (to be used when setting up form for create)
+function clearFormFields() {
+    document.getElementById('workoutId').value = "";
+    document.getElementById('date').value = "";
+    document.getElementById('type').value = "";
+    document.getElementById('duration').value = "";
+    document.getElementById('heartRateAvg').value = "";
+    document.getElementById('isFasted').checked = false;
+    document.getElementById('preWorkoutMeal').checked = false;
+    document.getElementById('caffeineConsumed').checked = false;
+    document.getElementById('notes').value = "";
+}
+
+//format duration in seconds to mm:ss
+function formatDuration(seconds) {
+    let minutes = Math.floor(seconds / 60);
+    let remainingSeconds = seconds % 60;
+    if (remainingSeconds < 10) remainingSeconds = '0' + remainingSeconds;
+    return `${minutes}:${remainingSeconds}`;
+}
+
+
+// Function to setup form for updating an existing workout
+function setupFormForUpdate(workout) {
+    // Set form values to the selected workout's details
+    document.getElementById('workoutId').value = workout.id;
+    document.getElementById('date').value = workout.date;
+    document.getElementById('type').value = workout.type;
+    document.getElementById('duration').value = formatDuration(workout.duration);
+    document.getElementById('heartRateAvg').value = workout.heartRateAvg;
+    document.getElementById('isFasted').checked = workout.isFasted;
+    document.getElementById('preWorkoutMeal').checked = workout.preWorkoutMeal;
+    document.getElementById('caffeineConsumed').checked = workout.caffeineConsumed;
+    document.getElementById('notes').value = workout.notes;
+
     let form = document.getElementById('newWorkoutForm');
     form.onsubmit = function(event) {
-        submitWorkoutForm(event, workoutId); 
+        submitWorkoutForm(event, workout.id);
     };
+    document.getElementById('formHeading').textContent = "Update Workout";
+    document.getElementById('submitBtn').textContent = "Update Workout";
+}
+
+
+// Function to delete a workout
+function deleteWorkout(workoutId) {
+	let xhr = new XMLHttpRequest();
+	xhr.open('DELETE', '/api/workouts/' + workoutId, true);
+	xhr.onload = function() {
+		if (xhr.status === 200) {
+			console.log('Workout deleted successfully');
+			loadWorkoutLog(); // Reload the list of workouts to reflect the deletion
+		} else {
+			console.error('Failed to delete workout:', xhr.status, xhr.responseText);
+		}
+	};
+	xhr.send();
 }
