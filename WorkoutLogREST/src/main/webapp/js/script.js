@@ -94,6 +94,16 @@ function displayWorkouts(workouts) {
 			deleteWorkout(workout.id);
 		};
 		workoutDiv.appendChild(deleteButton);
+		
+		// view details modal
+		 let detailsButton = document.createElement('button');
+        detailsButton.textContent = 'Details';
+        detailsButton.className = 'btn btn-info';
+        detailsButton.setAttribute('data-bs-toggle', 'modal');
+        detailsButton.setAttribute('data-bs-target', '#workoutDetailsModal');
+        detailsButton.onclick = function() { displayWorkoutDetails(workout); };
+        workoutDiv.appendChild(detailsButton);
+
 
 		// Append the workout div to the container.
 		contentDiv.appendChild(workoutDiv);
@@ -181,6 +191,17 @@ function displayWorkoutsInTable(workouts) {
 		row.appendChild(actionsCell);
 
 		tbody.appendChild(row);
+		
+		// Add detail button
+     	let detailsButton = document.createElement('button');
+        detailsButton.textContent = 'Details';
+        detailsButton.className = 'btn btn-info';
+        detailsButton.setAttribute('data-bs-toggle', 'modal');
+        detailsButton.setAttribute('data-bs-target', '#workoutDetailsModal');
+        detailsButton.onclick = function() { displayWorkoutDetails(workout); };
+        actionsCell.appendChild(detailsButton);
+
+		
 	}
 
 	table.appendChild(thead);
@@ -203,6 +224,10 @@ function submitWorkoutForm(event, workoutId) {
 	const durationInput = document.getElementById('duration').value;
 	const [minutes, seconds] = durationInput.split(':').map(Number); // need to split the input and convert to numbers
 
+	 // Collect data from the form, including age
+    let age = document.getElementById('age').value;
+    let heartRateAvg = document.getElementById('heartRateAvg').value;
+
 	// Collect data from the form
 	let formData = {
 		date: document.getElementById('date').value,
@@ -212,7 +237,9 @@ function submitWorkoutForm(event, workoutId) {
 		isFasted: document.getElementById('isFasted').checked,
 		preWorkoutMeal: document.getElementById('preWorkoutMeal').checked,
 		caffeineConsumed: document.getElementById('caffeineConsumed').checked,
-		notes: document.getElementById('notes').value
+		notes: document.getElementById('notes').value,
+		age: age, 
+        intensity: calculateIntensity(age, heartRateAvg) // Calculate and include intensity
 	};
 
 	let method = workoutId ? 'PUT' : 'POST';
@@ -355,4 +382,43 @@ function deleteWorkout(workoutId) {
 		}
 	};
 	xhr.send();
+}
+
+function displayWorkoutDetails(workout) {
+    let detailsDiv = document.getElementById('workoutDetails');
+    detailsDiv.textContent = ''; // Clear previous details
+
+    // Calculate intensity or other details
+    let intensity = calculateIntensity(workout.duration, workout.heartRateAvg);
+
+    let details = [
+        'Date: ' + workout.date,
+        'Type: ' + workout.type,
+        'Duration: ' + workout.duration,
+        'Heart Rate Avg: ' + workout.heartRateAvg + ' bpm',
+        'Fasted: ' + (workout.isFasted ? 'Yes' : 'No'),
+        'Pre Workout Meal: ' + (workout.preWorkoutMeal ? 'Yes' : 'No'),
+        'Caffeine Consumed: ' + (workout.caffeineConsumed ? 'Yes' : 'No'),
+        'Notes: ' + workout.notes,
+        'Intensity: ' + intensity
+    ];
+
+    details.forEach(function(detail) {
+        let p = document.createElement('p');
+        p.textContent = detail;
+        detailsDiv.appendChild(p);
+    });
+}
+
+function calculateIntensity(age, heartRateAvg) {
+    let maxHeartRate = 220 - age; // Calculate maximum heart rate
+    let intensity;
+    if (heartRateAvg < maxHeartRate * 0.5) {
+        intensity = 'Low';
+    } else if (heartRateAvg >= maxHeartRate * 0.5 && heartRateAvg < maxHeartRate * 0.7) {
+        intensity = 'Moderate';
+    } else if (heartRateAvg >= maxHeartRate * 0.7) {
+        intensity = 'Vigorous';
+    }
+    return intensity;
 }
