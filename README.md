@@ -2,7 +2,7 @@
 
 ## Event Tracker - REST API Overview
 
-The Event Tracker project is a Java-based REST API that tracks workout information in a MySQL database. 'MyFitnessTracker' is a (soon-to-be) web application designed to track fitness-related data, including workout details, exercise types, durations, and other relevant metrics.  This application provides basic CRUD (Create, Read, Update, Delete) operations through a RESTful API, allowing users to manage workout data efficiently.
+The Event Tracker project is a Java-based REST API that tracks workout information in a MySQL database. 'MyFitnessTracker' is a web application designed to track fitness-related data, including workout details, exercise types, durations, and other relevant metrics.  This application provides basic CRUD (Create, Read, Update, Delete) operations through a RESTful API, allowing users to manage workout data efficiently.
 
 ## Description
 
