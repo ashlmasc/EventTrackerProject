@@ -14,7 +14,7 @@
 <body onload="initializeForm()">
 	<h1>Workout Log</h1>
 
-	
+
 	<div id="tableContent"></div>
 	<div id="errors"></div>
 
@@ -71,25 +71,23 @@
 		<button type="submit" id="submitBtn" class="btn btn-primary">Create
 			Workout</button>
 	</form>
-	
-	<!-- Workout Details Modal -->
-<div class="modal fade" id="workoutDetailsModal" tabindex="-1" aria-labelledby="workoutDetailsModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="workoutDetailsModalLabel">Workout Details</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body" id="workoutDetails">
-        <!-- Details will be loaded here dynamically -->
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-	
+
+	<div class="modal fade" id="workoutDetailsModal" tabindex="-1"
+		aria-labelledby="workoutDetailsModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="workoutDetailsModalLabel">Workout
+						Details</h5>
+				</div>
+				<div class="modal-body" id="workoutDetails"></div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<div id="content"></div>
 

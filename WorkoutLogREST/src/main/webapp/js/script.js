@@ -1,30 +1,29 @@
 window.addEventListener('load', function(e) {
 	loadWorkoutLog();
-
 });
 
 function initializeForm() {
-    let workoutIdElement = document.getElementById('workoutId');
-    if (workoutIdElement) {
-        let workoutId = workoutIdElement.value;
-        if (workoutId) {
-            setupFormForUpdate(workoutId);
-        } else {
-            setupFormForCreate();
-        }
-    } else {
-        console.error("workoutId element not found");
-    }
-    
-    let age = getUserAge();
-    if (age) {
-        document.getElementById('age').value = age;
-    }
-    
-     // Added listener to age input to store value in sessionStorage when it changes
-    document.getElementById('age').addEventListener('change', function() {
-        storeUserAge();
-    });
+	let workoutIdElement = document.getElementById('workoutId');
+	if (workoutIdElement) {
+		let workoutId = workoutIdElement.value;
+		if (workoutId) {
+			setupFormForUpdate(workoutId);
+		} else {
+			setupFormForCreate();
+		}
+	} else {
+		console.error("workoutId element not found");
+	}
+
+	let age = getUserAge();
+	if (age) {
+		document.getElementById('age').value = age;
+	}
+
+	// Added listener to age input to store value in sessionStorage when it changes
+	document.getElementById('age').addEventListener('change', function() {
+		storeUserAge();
+	});
 }
 
 
@@ -103,15 +102,15 @@ function displayWorkouts(workouts) {
 			deleteWorkout(workout.id);
 		};
 		workoutDiv.appendChild(deleteButton);
-		
+
 		// view details modal
-		 let detailsButton = document.createElement('button');
-        detailsButton.textContent = 'Details';
-        detailsButton.className = 'btn btn-info';
-        detailsButton.setAttribute('data-bs-toggle', 'modal');
-        detailsButton.setAttribute('data-bs-target', '#workoutDetailsModal');
-        detailsButton.onclick = function() { displayWorkoutDetails(workout); };
-        workoutDiv.appendChild(detailsButton);
+		let detailsButton = document.createElement('button');
+		detailsButton.textContent = 'Details';
+		detailsButton.className = 'btn btn-info';
+		detailsButton.setAttribute('data-bs-toggle', 'modal');
+		detailsButton.setAttribute('data-bs-target', '#workoutDetailsModal');
+		detailsButton.onclick = function() { displayWorkoutDetails(workout); };
+		workoutDiv.appendChild(detailsButton);
 
 
 		// Append the workout div to the container.
@@ -200,17 +199,17 @@ function displayWorkoutsInTable(workouts) {
 		row.appendChild(actionsCell);
 
 		tbody.appendChild(row);
-		
-		// Add detail button
-     	let detailsButton = document.createElement('button');
-        detailsButton.textContent = 'Details';
-        detailsButton.className = 'btn btn-info';
-        detailsButton.setAttribute('data-bs-toggle', 'modal');
-        detailsButton.setAttribute('data-bs-target', '#workoutDetailsModal');
-        detailsButton.onclick = function() { displayWorkoutDetails(workout); };
-        actionsCell.appendChild(detailsButton);
 
-		
+		// Add detail button
+		let detailsButton = document.createElement('button');
+		detailsButton.textContent = 'Details';
+		detailsButton.className = 'btn btn-info';
+		detailsButton.setAttribute('data-bs-toggle', 'modal');
+		detailsButton.setAttribute('data-bs-target', '#workoutDetailsModal');
+		detailsButton.onclick = function() { displayWorkoutDetails(workout); };
+		actionsCell.appendChild(detailsButton);
+
+
 	}
 
 	table.appendChild(thead);
@@ -234,7 +233,7 @@ function submitWorkoutForm(event, workoutId) {
 	const [minutes, seconds] = durationInput.split(':').map(Number); // need to split the input and convert to numbers
 
 	let age = document.getElementById('age').value;
-    storeUserAge(); // Ensure age is stored when submitting form
+	storeUserAge(); // Ensure age is stored when submitting form
 
 	// Collect data from the form
 	let formData = {
@@ -246,21 +245,21 @@ function submitWorkoutForm(event, workoutId) {
 		preWorkoutMeal: document.getElementById('preWorkoutMeal').checked,
 		caffeineConsumed: document.getElementById('caffeineConsumed').checked,
 		notes: document.getElementById('notes').value,
-		age: age, 
-        intensity: calculateIntensity(age, heartRateAvg) // Calculate and include intensity
+		age: age,
+		intensity: calculateIntensity(age, heartRateAvg) // Calculate and include intensity
 	};
 
 	let method = workoutId ? 'PUT' : 'POST';
-   // let url = '/api/workouts' + (workoutId ? '/' + workoutId : ''); old one that shows an error
+	// let url = '/api/workouts' + (workoutId ? '/' + workoutId : ''); old one that shows an error
 	let url = workoutId ? `/api/workouts/${workoutId}` : '/api/workouts';
-	
+
 	console.log("Request Method:", method);
-    console.log("Request URL:", url);
+	console.log("Request URL:", url);
 
 	submitWorkoutData(formData, method, url, function() {
-        // Callback to reset form after successful submission
-        resetForm();
-    });
+		// Callback to reset form after successful submission
+		resetForm();
+	});
 }
 
 // validate form data
@@ -279,26 +278,26 @@ function validateWorkoutFormData(formData) {
 
 
 function submitWorkoutData(formData, method, url, callback) {
-    let xhr = new XMLHttpRequest();
-    xhr.open(method, url, true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.onload = function() {
-        if (xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 201)) {
-            console.log('Workout saved successfully');
-            loadWorkoutLog(); // Reload the list of workouts
-            callback(); // Reset form after successful data submission
-        } else {
-            console.error('Failed to save workout:', xhr.responseText);
-        }
-    };
-    xhr.send(JSON.stringify(formData));
+	let xhr = new XMLHttpRequest();
+	xhr.open(method, url, true);
+	xhr.setRequestHeader('Content-Type', 'application/json');
+	xhr.onload = function() {
+		if (xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 201)) {
+			console.log('Workout saved successfully');
+			loadWorkoutLog(); // Reload the list of workouts
+			callback(); // Reset form after successful data submission
+		} else {
+			console.error('Failed to save workout:', xhr.responseText);
+		}
+	};
+	xhr.send(JSON.stringify(formData));
 }
 
 function resetForm() {
-    document.getElementById('newWorkoutForm').reset(); // Reset all form fields
-    document.getElementById('formHeading').textContent = "Create New Workout";
-    document.getElementById('submitBtn').textContent = "Create Workout";
-    document.getElementById('workoutId').value = ""; // Clear the hidden workoutId value
+	document.getElementById('newWorkoutForm').reset(); // Reset all form fields
+	document.getElementById('formHeading').textContent = "Create New Workout";
+	document.getElementById('submitBtn').textContent = "Create Workout";
+	document.getElementById('workoutId').value = ""; // Clear the hidden workoutId value
 }
 
 // Display error messages
@@ -316,76 +315,76 @@ function displayErrors(errors) {
 // Function to setup form for new workout submission
 function setupFormForCreate() {
 	resetForm();
-    document.getElementById('workoutId').value = "";
-    clearFormFields();
-    let form = document.getElementById('newWorkoutForm');
-    form.onsubmit = function(event) {
-        submitWorkoutForm(event, null);
-    };
-    document.getElementById('formHeading').textContent = "Create New Workout";
-    document.getElementById('submitBtn').textContent = "Create Workout";
+	document.getElementById('workoutId').value = "";
+	clearFormFields();
+	let form = document.getElementById('newWorkoutForm');
+	form.onsubmit = function(event) {
+		submitWorkoutForm(event, null);
+	};
+	document.getElementById('formHeading').textContent = "Create New Workout";
+	document.getElementById('submitBtn').textContent = "Create Workout";
 }
 
 // Function to setup form for updating an existing workout
 function setupFormForUpdate(workout) {
-    let form = document.getElementById('newWorkoutForm');
-    // Set values from the workout to update
-    document.getElementById('workoutId').value = workout.id;
-    document.getElementById('date').value = workout.date;
-    document.getElementById('type').value = workout.type;
-    document.getElementById('duration').value = formatDuration(workout.duration);
-    document.getElementById('heartRateAvg').value = workout.heartRateAvg;
-    document.getElementById('isFasted').checked = workout.isFasted;
-    document.getElementById('preWorkoutMeal').checked = workout.preWorkoutMeal;
-    document.getElementById('caffeineConsumed').checked = workout.caffeineConsumed;
-    document.getElementById('notes').value = workout.notes;
+	let form = document.getElementById('newWorkoutForm');
+	// Set values from the workout to update
+	document.getElementById('workoutId').value = workout.id;
+	document.getElementById('date').value = workout.date;
+	document.getElementById('type').value = workout.type;
+	document.getElementById('duration').value = formatDuration(workout.duration);
+	document.getElementById('heartRateAvg').value = workout.heartRateAvg;
+	document.getElementById('isFasted').checked = workout.isFasted;
+	document.getElementById('preWorkoutMeal').checked = workout.preWorkoutMeal;
+	document.getElementById('caffeineConsumed').checked = workout.caffeineConsumed;
+	document.getElementById('notes').value = workout.notes;
 
-    form.onsubmit = function(event) {
-        submitWorkoutForm(event, workout.id); // Passing the actual workoutId for update
-    };
+	form.onsubmit = function(event) {
+		submitWorkoutForm(event, workout.id); // Passing the actual workoutId for update
+	};
 }
 
 // Function to clear form fields (to be used when setting up form for create)
 function clearFormFields() {
-    document.getElementById('workoutId').value = "";
-    document.getElementById('date').value = "";
-    document.getElementById('type').value = "";
-    document.getElementById('duration').value = "";
-    document.getElementById('heartRateAvg').value = "";
-    document.getElementById('isFasted').checked = false;
-    document.getElementById('preWorkoutMeal').checked = false;
-    document.getElementById('caffeineConsumed').checked = false;
-    document.getElementById('notes').value = "";
+	document.getElementById('workoutId').value = "";
+	document.getElementById('date').value = "";
+	document.getElementById('type').value = "";
+	document.getElementById('duration').value = "";
+	document.getElementById('heartRateAvg').value = "";
+	document.getElementById('isFasted').checked = false;
+	document.getElementById('preWorkoutMeal').checked = false;
+	document.getElementById('caffeineConsumed').checked = false;
+	document.getElementById('notes').value = "";
 }
 
 //format duration in seconds to mm:ss
 function formatDuration(seconds) {
-    let minutes = Math.floor(seconds / 60);
-    let remainingSeconds = seconds % 60;
-    if (remainingSeconds < 10) remainingSeconds = '0' + remainingSeconds;
-    return `${minutes}:${remainingSeconds}`;
+	let minutes = Math.floor(seconds / 60);
+	let remainingSeconds = seconds % 60;
+	if (remainingSeconds < 10) remainingSeconds = '0' + remainingSeconds;
+	return `${minutes}:${remainingSeconds}`;
 }
 
 
 // Function to setup form for updating an existing workout
 function setupFormForUpdate(workout) {
-    // Set form values to the selected workout's details
-    document.getElementById('workoutId').value = workout.id;
-    document.getElementById('date').value = workout.date;
-    document.getElementById('type').value = workout.type;
-    document.getElementById('duration').value = formatDuration(workout.duration);
-    document.getElementById('heartRateAvg').value = workout.heartRateAvg;
-    document.getElementById('isFasted').checked = workout.isFasted;
-    document.getElementById('preWorkoutMeal').checked = workout.preWorkoutMeal;
-    document.getElementById('caffeineConsumed').checked = workout.caffeineConsumed;
-    document.getElementById('notes').value = workout.notes;
+	// Set form values to the selected workout's details
+	document.getElementById('workoutId').value = workout.id;
+	document.getElementById('date').value = workout.date;
+	document.getElementById('type').value = workout.type;
+	document.getElementById('duration').value = formatDuration(workout.duration);
+	document.getElementById('heartRateAvg').value = workout.heartRateAvg;
+	document.getElementById('isFasted').checked = workout.isFasted;
+	document.getElementById('preWorkoutMeal').checked = workout.preWorkoutMeal;
+	document.getElementById('caffeineConsumed').checked = workout.caffeineConsumed;
+	document.getElementById('notes').value = workout.notes;
 
-    let form = document.getElementById('newWorkoutForm');
-    form.onsubmit = function(event) {
-        submitWorkoutForm(event, workout.id);
-    };
-    document.getElementById('formHeading').textContent = "Update Workout";
-    document.getElementById('submitBtn').textContent = "Update Workout";
+	let form = document.getElementById('newWorkoutForm');
+	form.onsubmit = function(event) {
+		submitWorkoutForm(event, workout.id);
+	};
+	document.getElementById('formHeading').textContent = "Update Workout";
+	document.getElementById('submitBtn').textContent = "Update Workout";
 }
 
 
@@ -405,63 +404,63 @@ function deleteWorkout(workoutId) {
 }
 
 function displayWorkoutDetails(workout) {
-    let detailsDiv = document.getElementById('workoutDetails');
-    detailsDiv.textContent = ''; // Clear previous details
+	let detailsDiv = document.getElementById('workoutDetails');
+	detailsDiv.textContent = ''; // Clear previous details
 
 	let formattedDuration = formatDuration(workout.duration); // Format duration
 
-    let details = [
-        'Date: ' + workout.date,
-        'Type: ' + workout.type,
-        'Duration: ' + formattedDuration,
-        'Heart Rate Avg: ' + workout.heartRateAvg + ' bpm',
-        'Fasted: ' + (workout.isFasted ? 'Yes' : 'No'),
-        'Pre Workout Meal: ' + (workout.preWorkoutMeal ? 'Yes' : 'No'),
-        'Caffeine Consumed: ' + (workout.caffeineConsumed ? 'Yes' : 'No'),
-        'Notes: ' + workout.notes,
-        'Intensity: ' + calculateIntensity(workout.heartRateAvg)
-    ];
+	let details = [
+		'Date: ' + workout.date,
+		'Type: ' + workout.type,
+		'Duration: ' + formattedDuration,
+		'Heart Rate Avg: ' + workout.heartRateAvg + ' bpm',
+		'Fasted: ' + (workout.isFasted ? 'Yes' : 'No'),
+		'Pre Workout Meal: ' + (workout.preWorkoutMeal ? 'Yes' : 'No'),
+		'Caffeine Consumed: ' + (workout.caffeineConsumed ? 'Yes' : 'No'),
+		'Notes: ' + workout.notes,
+		'Intensity: ' + calculateIntensity(workout.heartRateAvg)
+	];
 
-    details.forEach(function(detail) {
-        let p = document.createElement('p');
-        p.textContent = detail;
-        detailsDiv.appendChild(p);
-    });
+	details.forEach(function(detail) {
+		let p = document.createElement('p');
+		p.textContent = detail;
+		detailsDiv.appendChild(p);
+	});
 }
 
 // calls function when the user inputs their age or logs in
 // Set age in sessionStorage
 function storeUserAge() {
-    let age = document.getElementById('age').value;
-    sessionStorage.setItem('userAge', age);
-    console.log("Stored age:", age); // Added console log to check if age is being called
+	let age = document.getElementById('age').value;
+	sessionStorage.setItem('userAge', age);
+	console.log("Stored age:", age); // Added console log to check if age is being called
 }
 
 // Get age from sessionStorage
 function getUserAge() {
-    return sessionStorage.getItem('userAge');
+	return sessionStorage.getItem('userAge');
 }
 
 function calculateIntensity(heartRateAvg) {
-    let age = parseInt(getUserAge(), 10);  // Ensure age is an integer
-    if (!age) {
-        console.error("Age not found in sessionStorage or invalid");
-        return "Intensity not available";
-    }
+	let age = parseInt(getUserAge(), 10);  // Ensure age is an integer
+	if (!age) {
+		console.error("Age not found in sessionStorage or invalid");
+		return "Intensity not available";
+	}
 
-    let maxHeartRate = 220 - age;
-    let intensityLevel;
+	let maxHeartRate = 220 - age;
+	let intensityLevel;
 
-    if (heartRateAvg < maxHeartRate * 0.5) {
-        intensityLevel = 'Low';
-    } else if (heartRateAvg < maxHeartRate * 0.7) {
-        intensityLevel = 'Moderate';
-    } else if (heartRateAvg <= maxHeartRate * 0.85) {
-        intensityLevel = 'Vigorous';
-    } else {
-        intensityLevel = 'Very Vigorous';
-    }
+	if (heartRateAvg < maxHeartRate * 0.5) {
+		intensityLevel = 'Low';
+	} else if (heartRateAvg < maxHeartRate * 0.7) {
+		intensityLevel = 'Moderate';
+	} else if (heartRateAvg <= maxHeartRate * 0.85) {
+		intensityLevel = 'Vigorous';
+	} else {
+		intensityLevel = 'Very Vigorous';
+	}
 
-    console.log(`Age: ${age}, Heart Rate Avg: ${heartRateAvg}, Max Heart Rate: ${maxHeartRate}, Intensity: ${intensityLevel}`);
-    return intensityLevel;
+	console.log(`Age: ${age}, Heart Rate Avg: ${heartRateAvg}, Max Heart Rate: ${maxHeartRate}, Intensity: ${intensityLevel}`);
+	return intensityLevel;
 }
