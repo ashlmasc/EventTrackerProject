@@ -1,7 +1,6 @@
 window.addEventListener('load', function(e) {
 	loadWorkoutLog();
 
-
 });
 
 function initializeForm() {
@@ -16,6 +15,16 @@ function initializeForm() {
     } else {
         console.error("workoutId element not found");
     }
+    
+    let age = getUserAge();
+    if (age) {
+        document.getElementById('age').value = age;
+    }
+    
+     // Added listener to age input to store value in sessionStorage when it changes
+    document.getElementById('age').addEventListener('change', function() {
+        storeUserAge();
+    });
 }
 
 
@@ -224,9 +233,8 @@ function submitWorkoutForm(event, workoutId) {
 	const durationInput = document.getElementById('duration').value;
 	const [minutes, seconds] = durationInput.split(':').map(Number); // need to split the input and convert to numbers
 
-	 // Collect data from the form, including age
-    let age = document.getElementById('age').value;
-    let heartRateAvg = document.getElementById('heartRateAvg').value;
+	let age = document.getElementById('age').value;
+    storeUserAge(); // Ensure age is stored when submitting form
 
 	// Collect data from the form
 	let formData = {
@@ -249,7 +257,10 @@ function submitWorkoutForm(event, workoutId) {
 	console.log("Request Method:", method);
     console.log("Request URL:", url);
 
-	submitWorkoutData(formData, method, url);
+	submitWorkoutData(formData, method, url, function() {
+        // Callback to reset form after successful submission
+        resetForm();
+    });
 }
 
 // validate form data
@@ -267,19 +278,27 @@ function validateWorkoutFormData(formData) {
 }
 
 
-function submitWorkoutData(formData, method, url) {
-	let xhr = new XMLHttpRequest();
-	xhr.open(method, url, true);
-	xhr.setRequestHeader('Content-Type', 'application/json');
-	xhr.onload = function() {
-		if (xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 201)) {
-			console.log('Workout saved successfully');
-			loadWorkoutLog(); // Reload the list of workouts
-		} else {
-			console.error('Failed to save workout:', xhr.responseText);
-		}
-	};
-	xhr.send(JSON.stringify(formData));
+function submitWorkoutData(formData, method, url, callback) {
+    let xhr = new XMLHttpRequest();
+    xhr.open(method, url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function() {
+        if (xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 201)) {
+            console.log('Workout saved successfully');
+            loadWorkoutLog(); // Reload the list of workouts
+            callback(); // Reset form after successful data submission
+        } else {
+            console.error('Failed to save workout:', xhr.responseText);
+        }
+    };
+    xhr.send(JSON.stringify(formData));
+}
+
+function resetForm() {
+    document.getElementById('newWorkoutForm').reset(); // Reset all form fields
+    document.getElementById('formHeading').textContent = "Create New Workout";
+    document.getElementById('submitBtn').textContent = "Create Workout";
+    document.getElementById('workoutId').value = ""; // Clear the hidden workoutId value
 }
 
 // Display error messages
@@ -296,6 +315,7 @@ function displayErrors(errors) {
 
 // Function to setup form for new workout submission
 function setupFormForCreate() {
+	resetForm();
     document.getElementById('workoutId').value = "";
     clearFormFields();
     let form = document.getElementById('newWorkoutForm');
@@ -388,19 +408,18 @@ function displayWorkoutDetails(workout) {
     let detailsDiv = document.getElementById('workoutDetails');
     detailsDiv.textContent = ''; // Clear previous details
 
-    // Calculate intensity or other details
-    let intensity = calculateIntensity(workout.duration, workout.heartRateAvg);
+	let formattedDuration = formatDuration(workout.duration); // Format duration
 
     let details = [
         'Date: ' + workout.date,
         'Type: ' + workout.type,
-        'Duration: ' + workout.duration,
+        'Duration: ' + formattedDuration,
         'Heart Rate Avg: ' + workout.heartRateAvg + ' bpm',
         'Fasted: ' + (workout.isFasted ? 'Yes' : 'No'),
         'Pre Workout Meal: ' + (workout.preWorkoutMeal ? 'Yes' : 'No'),
         'Caffeine Consumed: ' + (workout.caffeineConsumed ? 'Yes' : 'No'),
         'Notes: ' + workout.notes,
-        'Intensity: ' + intensity
+        'Intensity: ' + calculateIntensity(workout.heartRateAvg)
     ];
 
     details.forEach(function(detail) {
@@ -410,15 +429,39 @@ function displayWorkoutDetails(workout) {
     });
 }
 
-function calculateIntensity(age, heartRateAvg) {
-    let maxHeartRate = 220 - age; // Calculate maximum heart rate
-    let intensity;
-    if (heartRateAvg < maxHeartRate * 0.5) {
-        intensity = 'Low';
-    } else if (heartRateAvg >= maxHeartRate * 0.5 && heartRateAvg < maxHeartRate * 0.7) {
-        intensity = 'Moderate';
-    } else if (heartRateAvg >= maxHeartRate * 0.7) {
-        intensity = 'Vigorous';
+// calls function when the user inputs their age or logs in
+// Set age in sessionStorage
+function storeUserAge() {
+    let age = document.getElementById('age').value;
+    sessionStorage.setItem('userAge', age);
+    console.log("Stored age:", age); // Added console log to check if age is being called
+}
+
+// Get age from sessionStorage
+function getUserAge() {
+    return sessionStorage.getItem('userAge');
+}
+
+function calculateIntensity(heartRateAvg) {
+    let age = parseInt(getUserAge(), 10);  // Ensure age is an integer
+    if (!age) {
+        console.error("Age not found in sessionStorage or invalid");
+        return "Intensity not available";
     }
-    return intensity;
+
+    let maxHeartRate = 220 - age;
+    let intensityLevel;
+
+    if (heartRateAvg < maxHeartRate * 0.5) {
+        intensityLevel = 'Low';
+    } else if (heartRateAvg < maxHeartRate * 0.7) {
+        intensityLevel = 'Moderate';
+    } else if (heartRateAvg <= maxHeartRate * 0.85) {
+        intensityLevel = 'Vigorous';
+    } else {
+        intensityLevel = 'Very Vigorous';
+    }
+
+    console.log(`Age: ${age}, Heart Rate Avg: ${heartRateAvg}, Max Heart Rate: ${maxHeartRate}, Intensity: ${intensityLevel}`);
+    return intensityLevel;
 }
