@@ -1,4 +1,11 @@
-<p>workout-list works!</p>
-<div *ngFor="let workout of workouts">
-    <p>{{ workout.name }}: {{ workout.date }} - Duration: {{ workout.duration }} minutes</p>
+<div *ngFor="let workout of workouts" class="col-sm-4 mb-3">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ workout.name }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{ workout.date | date:'mediumDate' }}</h6>
+            <p class="card-text">Duration: {{ workout.duration }} minutes</p>
+            <p class="card-text">Intensity: {{ workout.intensity }}</p>
+            <p class="card-text">Type: {{ workout.type }}</p>
+        </div>
+    </div>
 </div>
