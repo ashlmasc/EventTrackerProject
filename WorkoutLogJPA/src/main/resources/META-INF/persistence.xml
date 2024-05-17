@@ -16,8 +16,8 @@
       <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
 
 <!-- set back to false when going to production -->
-      <property name="hibernate.show_sql" value="true" />
-      <property name="hibernate.format_sql" value="true" />
+      <property name="hibernate.show_sql" value="false" />
+      <property name="hibernate.format_sql" value="false" />
 
       <property name="hibernate.connection.provider_class" value="org.hibernate.connection.C3P0ConnectionProvider" />
       <property name="hibernate.c3p0.max_size" value="5" />

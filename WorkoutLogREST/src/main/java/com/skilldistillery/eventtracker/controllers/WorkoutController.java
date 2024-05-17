@@ -2,6 +2,7 @@ package com.skilldistillery.eventtracker.controllers;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.skilldistillery.eventtracker.entities.Workout;
 import com.skilldistillery.eventtracker.services.WorkoutService;
 
-
+@CrossOrigin({"*", "http://localhost/"})
 @RestController
 @RequestMapping("/api")
 public class WorkoutController {
@@ -23,7 +24,7 @@ public class WorkoutController {
 
 	public WorkoutController(WorkoutService workoutService) {
 		this.workoutService = workoutService;
-	}
+		}
 
 	@GetMapping("ping")
 	public String ping() {
