@@ -1,0 +1,55 @@
+<div class="container mt-4">
+    <h2>Edit Workout</h2>
+    <form (ngSubmit)="updateWorkout()" #workoutForm="ngForm">
+      <div class="mb-3">
+        <label for="date" class="form-label">Date</label>
+        <input type="date" id="date" class="form-control" [(ngModel)]="workout.date" name="date" required>
+      </div>
+      
+      <div class="mb-3">
+        <label for="type" class="form-label">Type</label>
+        <input type="text" id="type" class="form-control" [(ngModel)]="workout.type" name="type">
+      </div>
+      
+      <div class="mb-3">
+        <label for="duration" class="form-label">Duration (mm:ss)</label>
+        <input type="text" id="duration" class="form-control" [(ngModel)]="workout.durationDisplay" name="duration">
+      </div>     
+      
+      <div class="mb-3">
+        <label for="heartRateAvg" class="form-label">Average Heart Rate</label>
+        <input type="number" id="heartRateAvg" class="form-control" [(ngModel)]="workout.heartRateAvg" name="heartRateAvg">
+      </div>
+      
+      <div class="mb-3">
+        <label class="form-label">Is Fasted?</label>
+        <div>
+          <input type="checkbox" id="isFasted" [(ngModel)]="workout.isFasted" name="isFasted">
+          <label for="isFasted" class="ms-2">Yes</label>
+        </div>
+      </div>
+      
+      <div class="mb-3">
+        <label class="form-label">Pre Workout Meal?</label>
+        <div>
+          <input type="checkbox" id="preWorkoutMeal" [(ngModel)]="workout.preWorkoutMeal" name="preWorkoutMeal">
+          <label for="preWorkoutMeal" class="ms-2">Yes</label>
+        </div>
+      </div>
+      
+      <div class="mb-3">
+        <label class="form-label">Caffeine Consumed?</label>
+        <div>
+          <input type="checkbox" id="caffeineConsumed" [(ngModel)]="workout.caffeineConsumed" name="caffeineConsumed">
+          <label for="caffeineConsumed" class="ms-2">Yes</label>
+        </div>
+      </div>
+      
+      <div class="mb-3">
+        <label for="notes" class="form-label">Notes</label>
+        <textarea id="notes" class="form-control" [(ngModel)]="workout.notes" name="notes" rows="3"></textarea>
+      </div>
+      
+      <button type="submit" class="btn btn-primary">Update Workout</button>
+    </form>
+  </div>

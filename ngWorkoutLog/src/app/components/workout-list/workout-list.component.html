@@ -1,11 +1,37 @@
-<div *ngFor="let workout of workouts" class="col-sm-4 mb-3">
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">{{ workout.name }}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">{{ workout.date | date:'mediumDate' }}</h6>
-            <p class="card-text">Duration: {{ workout.duration }} minutes</p>
-            <p class="card-text">Intensity: {{ workout.intensity }}</p>
-            <p class="card-text">Type: {{ workout.type }}</p>
-        </div>
-    </div>
+<div class="container mt-4">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Type</th>
+        <th>Duration (mm:ss)</th>
+        <th>Avg Heart Rate</th>
+        <th>Is Fasted?</th>
+        <th>Pre Workout Meal?</th>
+        <th>Caffeine Consumed?</th>
+        <th>Notes</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let workout of workouts">
+        <td>{{ workout.date | date: 'mediumDate' }}</td>
+        <td>{{ workout.type }}</td>
+        <td>{{ workout.durationDisplay }}</td>
+        <td>{{ workout.heartRateAvg }}</td>
+        <td>{{ workout.isFasted ? 'Yes' : 'No' }}</td>
+        <td>{{ workout.preWorkoutMeal ? 'Yes' : 'No' }}</td>
+        <td>{{ workout.caffeineConsumed ? 'Yes' : 'No' }}</td>
+        <td>{{ workout.notes }}</td>
+        <td>
+          <a class="btn btn-primary" [routerLink]="['/workouts/edit', workout.id]">Edit</a>
+          <button class="btn btn-danger" (click)="confirmDelete(workout.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="mb-3">
+  <a class="btn btn-success" routerLink="/workouts/add">Add New Workout</a>
 </div>

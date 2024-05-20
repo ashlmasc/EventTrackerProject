@@ -1,0 +1,57 @@
+<div class="container mt-3">
+    <h2>Add New Workout</h2>
+    <form #workoutForm="ngForm" (ngSubmit)="onSubmit(workoutForm)" novalidate>
+        <div class="mb-3">
+        <label for="date" class="form-label">Date:</label>
+        <input type="date" class="form-control" id="date" name="date" [(ngModel)]="workout.date" required>
+      </div>
+      <div class="mb-3">
+        <label for="type" class="form-label">Type:</label>
+        <input type="text" class="form-control" id="type" name="type" [(ngModel)]="workout.type">
+      </div>
+      <div class="mb-3">
+        <label for="duration" class="form-label">Duration (mm:ss):</label>
+        <input type="text" class="form-control" id="duration" name="duration" [(ngModel)]="workout.durationDisplay" required>
+      </div>
+      <div class="mb-3">
+        <label for="heartRateAvg" class="form-label">Average Heart Rate:</label>
+        <input type="number" class="form-control" id="heartRateAvg" name="heartRateAvg" [(ngModel)]="workout.heartRateAvg">
+      </div>
+      <div class="mb-3">
+        <label for="isFasted" class="form-label">Is Fasted:</label>
+        <input type="checkbox" id="isFasted" name="isFasted" [(ngModel)]="workout.isFasted">
+      </div>
+      <div class="mb-3">
+        <label for="preWorkoutMeal" class="form-label">Pre Workout Meal:</label>
+        <input type="checkbox" id="preWorkoutMeal" name="preWorkoutMeal" [(ngModel)]="workout.preWorkoutMeal">
+      </div>
+      <div class="mb-3">
+        <label for="caffeineConsumed" class="form-label">Caffeine Consumed:</label>
+        <input type="checkbox" id="caffeineConsumed" name="caffeineConsumed" [(ngModel)]="workout.caffeineConsumed">
+      </div>
+      <div class="mb-3">
+        <label for="notes" class="form-label">Notes:</label>
+        <textarea class="form-control" id="notes" name="notes" [(ngModel)]="workout.notes"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Add Workout</button>
+    </form>
+</div> 
+
+<!-- Add Workout Confirmation Modal -->
+<div class="modal fade" id="addWorkoutModal" tabindex="-1" aria-labelledby="addWorkoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addWorkoutModalLabel">Workout Added Successfully</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Would you like to add another workout or go back to the workout list?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Add Another</button>
+          <button type="button" class="btn btn-primary" (click)="navigateToList()">Go to Workout List</button>
+        </div>
+      </div>
+    </div>
+  </div>
